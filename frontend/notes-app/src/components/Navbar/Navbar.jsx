@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
-const Navbar = () => {
+const Navbar = ({ userInfo }) => {
   const [searchQuerry, setSearchQuerry] = useState("");
 
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const onLogout = () => {
-    navigate("login");
+    localStorage.clear();
+    navigate("/login");
   };
 
   const handleSearch = () => {};
 
   const onClearSearch = () => {
-    setSearchQuerry("")
-  }
+    setSearchQuerry("");
+  };
 
   return (
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
@@ -29,7 +30,7 @@ const Navbar = () => {
         onClearSearch={onClearSearch}
       />
 
-      <ProfileInfo onLogout={onLogout} />
+      <ProfileInfo userInfo={userInfo} onLogout={onLogout} />
     </div>
   );
 };
