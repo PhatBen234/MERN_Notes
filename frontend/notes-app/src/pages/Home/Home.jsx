@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
 import { MdAdd } from "react-icons/md";
@@ -14,8 +14,13 @@ const Home = () => {
     data: null,
   });
 
+  const [allNotes, setAllNotes] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
+
+  const handleEdit = (noteDetails) => {
+    setOpenAddEditModal({ isShown: true, data: noteDetails, type: "edit" });
+  };
 
   const getUserInfo = async () => {
     try {
@@ -33,7 +38,20 @@ const Home = () => {
     }
   };
 
+  const getAllNotes = async () => {
+    try {
+      const response = await axiosInstance.get("/note/get-notes");
+
+      if (response.data && response.data.notes) {
+        setAllNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
+
   useEffect(() => {
+    getAllNotes();
     getUserInfo();
     return () => {};
   }, []);
@@ -44,16 +62,19 @@ const Home = () => {
 
       <div className="container mx-auto">
         <div className="grid grid-cols-3 gap-4 mt-8">
-          <NoteCard
-            title="Meet"
-            date="3rd Apr 2024"
-            content="Go to SC Vivo"
-            tags="#Meeting"
-            isPinned={true}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onPinNote={() => {}}
-          />
+          {allNotes.map((item, index) => (
+            <NoteCard
+              key={item._id}
+              title={item.title}
+              date={item.createdOn}
+              content={item.content}
+              tags={item.tags}
+              isPinned={item.isPinned}
+              onEdit={() => handleEdit(item)}
+              onDelete={() => {}}
+              onPinNote={() => {}}
+            />
+          ))}
         </div>
       </div>
 
@@ -83,6 +104,7 @@ const Home = () => {
           onClose={() => {
             setOpenAddEditModal({ isShown: false, type: "add", data: null });
           }}
+          getAllNotes={getAllNotes}
         />
       </Modal>
     </>
