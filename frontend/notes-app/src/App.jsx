@@ -1,21 +1,39 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
+import Modal from "react-modal";
 
-const routes = (
-  <Router>
-    <Routes>
-      <Route path="/dashboard" exact element={<Home />} />
-      <Route path="/login" exact element={<Login />} />
-      <Route path="/signup" exact element={<SignUp />} />
-    </Routes>
-  </Router>
-);
+Modal.setAppElement("#root");
+
+const isAuthenticated = () => {
+  return !!localStorage.getItem("token"); 
+};
 
 const App = () => {
-  return <div>{routes}</div>;
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/dashboard"
+          element={isAuthenticated() ? <Home /> : <Navigate to="/login" />}
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route
+          path="/"
+          element={
+            <Navigate to={isAuthenticated() ? "/dashboard" : "/login"} />
+          }
+        />
+      </Routes>
+    </Router>
+  );
 };
 
 export default App;

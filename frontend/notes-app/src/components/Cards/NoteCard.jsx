@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import moment from "moment";
 import { MdOutlinePushPin, MdCreate, MdDelete } from "react-icons/md";
 
@@ -54,6 +54,17 @@ const NoteCard = ({
       </div>
     </div>
   );
+};
+
+NoteCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  isPinned: PropTypes.bool.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onPinNote: PropTypes.func.isRequired,
 };
 
 export default NoteCard;

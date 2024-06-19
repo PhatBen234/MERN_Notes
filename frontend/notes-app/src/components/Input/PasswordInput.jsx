@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 const PasswordInput = ({ value, onChange, placeholder }) => {
@@ -22,17 +23,23 @@ const PasswordInput = ({ value, onChange, placeholder }) => {
         <FaRegEye
           size={22}
           className="text-primary cursor-pointer"
-          onClick={()=> toggleShowPassword()}
+          onClick={() => toggleShowPassword()}
         />
       ) : (
         <FaRegEyeSlash
           size={22}
           className="text-slate-400 cursor-pointer"
-          onClick={()=> toggleShowPassword()}
+          onClick={() => toggleShowPassword()}
         />
       )}
     </div>
   );
+};
+
+PasswordInput.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
 };
 
 export default PasswordInput;

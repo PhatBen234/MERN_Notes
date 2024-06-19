@@ -1,9 +1,13 @@
-import React from "react";
+import PropTypes from "prop-types";
 import { getInitials } from "../../utils/helper";
 
 const ProfileInfo = ({ userInfo, onLogout }) => {
-  const fullName = userInfo?.fullName;
+  const fullName = userInfo?.fullName || "";
   const initials = getInitials(fullName);
+
+  if (!userInfo) {
+    return null;
+  }
 
   return (
     <div className="flex items-center gap-3">
@@ -19,6 +23,13 @@ const ProfileInfo = ({ userInfo, onLogout }) => {
       </div>
     </div>
   );
+};
+
+ProfileInfo.propTypes = {
+  userInfo: PropTypes.shape({
+    fullName: PropTypes.string.isRequired,
+  }),
+  onLogout: PropTypes.func.isRequired,
 };
 
 export default ProfileInfo;

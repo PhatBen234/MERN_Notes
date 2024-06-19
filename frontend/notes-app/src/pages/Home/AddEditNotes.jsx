@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import TagInput from "../../components/Input/TagInput";
 import { MdClose } from "react-icons/md";
 import axiosInstance from "../../utils/axiosInstance";
 
-const AddEditNotes = ({ noteData, type, getAllNotes, onClose }) => {
+const AddEditNotes = ({
+  noteData,
+  type,
+  getAllNotes,
+  onClose,
+  showToastMessage,
+}) => {
   const [title, setTitle] = useState(noteData?.title || "");
   const [content, setContent] = useState(noteData?.content || "");
   const [tags, setTags] = useState(noteData?.tags || []);
@@ -20,6 +27,7 @@ const AddEditNotes = ({ noteData, type, getAllNotes, onClose }) => {
       if (response.data && response.data.note) {
         getAllNotes();
         onClose();
+        showToastMessage("Note added Successfully");
       }
     } catch (error) {
       if (
@@ -31,6 +39,7 @@ const AddEditNotes = ({ noteData, type, getAllNotes, onClose }) => {
       }
     }
   };
+
   const editNote = async () => {
     const noteId = noteData._id;
     try {
@@ -40,6 +49,7 @@ const AddEditNotes = ({ noteData, type, getAllNotes, onClose }) => {
         tags,
       });
       if (response.data && response.data.note) {
+        showToastMessage("Note edited Successfully");
         getAllNotes();
         onClose();
       }
@@ -123,6 +133,19 @@ const AddEditNotes = ({ noteData, type, getAllNotes, onClose }) => {
       </button>
     </div>
   );
+};
+
+AddEditNotes.propTypes = {
+  noteData: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    content: PropTypes.string,
+    tags: PropTypes.arrayOf(PropTypes.string),
+  }),
+  type: PropTypes.oneOf(["add", "edit"]).isRequired,
+  getAllNotes: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  showToastMessage: PropTypes.func.isRequired,
 };
 
 export default AddEditNotes;
